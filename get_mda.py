@@ -222,25 +222,101 @@ def getData(fname):
 
     det = makeDet(detSize, scanSize)
 
-    # read transmission data
-    pvColumnNames = ['EncEnergy:ActPos', 'scaler1:S2C', 'scaler1:S3C',
-                     'scaler1:S4C', 'scaler1.T', 'EncAngle:ActPos']
 
-    trans = np.empty((len(pvColumnNames), scanSize))
-    for series in scanData.d:
-        try:
-            tag = ':'.join(series.name.split(':')[1:])  # use the PV part after the IOC id
-            trans[pvColumnNames.index(tag)] = series.data
-        except:
+    # generate a list of scan record detectors used (as written into the base mda file)
+    numD = len(scanData.d)
+    pvDetectors = []
+    for i in np.arange(numD) :
+        pvDetectors.append( ':'.join(scanData.d[i].name.split(':')[1:]) )
+    print ''
+    print 'Detector PVs found in source file: ', pvDetectors
+
+
+    # test, which set of pvColumnNames is compatible with the list of scan detectors
+    #  (this is for compatibility reasons pre-/post- new DCM integration)
+    #
+    # before DCM install:  pvColumnNames includes 'EncEnergy:ActPos' as energy PV
+    # after DCM install: energy PV is now called 'ENERGY_RBV'
+    #
+    # any future changes to PV names:  add a corresponding list to pvColumnNames
+
+
+    pvColumnNames = [['EncEnergy:ActPos', 'scaler1:S2C', 'scaler1:S3C',
+                     'scaler1:S4C', 'scaler1.T', 'EncAngle:ActPos'],
+                     ['ENERGY_RBV', 'scaler1:S2C', 'scaler1:S3C',
+                     'scaler1:S4C', 'scaler1.T', 'BRAGG.RBV']]
+
+    # go through the lists of PVs and test whether these are in the data file (i.e., in 'pvDetectors');
+    # choose that list which is consistent with pvDetectors
+    pvNotFound = []
+    dataRead = False
+    for PVs in pvColumnNames[:] :
+        if dataRead :
+            break
+        trans = np.zeros( (len(PVs), scanSize) )
+        #
+        # Step 1: test if list is complete
+        for i in PVs :
+            if i not in pvDetectors : pvNotFound.append(i)
+        #
+        # Step 2: if not, pass and go to next list;
+        #         if OK, go through that list again and read in transmission channels
+        if len(pvNotFound) > 0 :
+            pvNotFound = []
             pass
+        else :
+            print 'Reading PV columns and transmission data from source file: ', PVs
+            print ''
+            for i in PVs :
+                dataIndex = pvDetectors.index(i)
+                trans[PVs.index(i)] = scanData.d[dataIndex].data
+            #
+            energyPV = PVs[0]
+            print 'Setting energy PV to: ', energyPV
+            e = trans[PVs.index(energyPV)] * 1000.0   # Energy axis (in eV !!)
+            #
+            sampletimePV = 'scaler1.T'
+            print 'Setting sample time PV to: ', sampletimePV
+            ts = trans[PVs.index(sampletimePV)]    # get the sample time "t_s"
+            #
+            # normalise I0, I1, I2 to sample_time ts (use string "scaler1:S" as identifier)
+            print 'Normalising ion chamber signals (I0, I1, I2) to sample time.'
+            for i, name in enumerate(PVs):
+                if name.startswith('scaler1:S'):
+                    trans[i] = trans[i] / ts
+            dataRead = True
 
-    ts = trans[pvColumnNames.index('scaler1.T')]    # get the sample time "t_s"
-    e = trans[pvColumnNames.index('EncEnergy:ActPos')] * 1000.0   # Energy axis (in eV !!)
+    if len(pvNotFound) > 0 :
+        print 'ERROR -- one or more detector PV(s) not found: '
+        try : stop
+        except : pass
 
-    # normalise I0, I1, I2 to sample_time ts (use string "scaler1:" as identifier)
-    for i, name in enumerate(pvColumnNames):
-        if name.startswith('scaler1:'):
-            trans[i] = trans[i] / ts
+
+
+
+
+
+#    for series in scanData.d:
+#        tag = ':'.join(series.name.split(':')[1:])  # use the PV part after the Beamline/IOC id
+#        if tag in pvColumnNames :
+#            print 'tag found: ', tag
+#            trans[pvColumnNames.index(tag)] = series.data
+#        else:
+#            print 'at least one detector PV not found (',tag,'); trying different PV list list'
+
+    # read transmission data
+#    trans = np.empty((len(pvColumnNames), scanSize))
+#    for series in scanData.d:
+#        try:
+#            tag = ':'.join(series.name.split(':')[1:])  # use the PV part after the IOC id
+#            trans[pvColumnNames.index(tag)] = series.data
+#        except:
+#            pass
+
+#    ts = trans[pvColumnNames.index('scaler1.T')]    # get the sample time "t_s"
+#    e = trans[pvColumnNames.index('EncEnergy:ActPos')] * 1000.0   # Energy axis (in eV !!)
+
+
 
     # read fluorescence data (if it exists)
     if detSize != 0:
@@ -592,7 +668,7 @@ def getE0(e):
     if scanRange < 500:
         eMax = eMin + scanRange / 2.0
     else:
-        eMax = eMin + 300
+        eMax = eMin + 500
 
     # from etab.edgeEnergy dict find all keys (elements) that have edges
     #   between eMin and eMax

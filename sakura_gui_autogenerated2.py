@@ -42,11 +42,11 @@ class MainFrame ( wx.Frame ):
 		
 		self.m_toolBar1 = wx.ToolBar( self.m_ToolPanel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TB_HORIZONTAL )
 		self.m_toolBar1.SetToolBitmapSize( wx.Size( 16,16 ) )
-		self.m_LoadTool = self.m_toolBar1.AddTool( id_load, u"Load", wx.Bitmap( u"resources/folder_vertical_open.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, u"Load", wx.EmptyString, None )
+		self.m_LoadTool = self.m_toolBar1.AddLabelTool( id_load, u"Load", wx.Bitmap( u"resources/folder_vertical_open.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, u"Load", wx.EmptyString, None ) 
 		
-		self.m_SaveTool = self.m_toolBar1.AddTool( id_save, u"Save", wx.Bitmap( u"resources/disk.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, u"Save", wx.EmptyString, None )
+		self.m_SaveTool = self.m_toolBar1.AddLabelTool( id_save, u"Save", wx.Bitmap( u"resources/disk.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, u"Save", wx.EmptyString, None ) 
 		
-		self.m_UnloadTool = self.m_toolBar1.AddTool( id_unload, u"Unload", wx.Bitmap( u"resources/folder_vertical_torn.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, u"Unload", wx.EmptyString, None )
+		self.m_UnloadTool = self.m_toolBar1.AddLabelTool( id_unload, u"Unload", wx.Bitmap( u"resources/folder_vertical_torn.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, u"Unload", wx.EmptyString, None ) 
 		
 		self.m_toolBar1.Realize() 
 		
@@ -62,7 +62,7 @@ class MainFrame ( wx.Frame ):
 		
 		self.m_toolBar3 = wx.ToolBar( self.m_ToolPanel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TB_HORIZONTAL )
 		self.m_toolBar3.SetToolBitmapSize( wx.Size( 16,16 ) )
-		self.m_ExitTool = self.m_toolBar3.AddTool( id_exit, u"Exit", wx.Bitmap( u"resources/door_in.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, u"Exit", wx.EmptyString, None )
+		self.m_ExitTool = self.m_toolBar3.AddLabelTool( id_exit, u"Exit", wx.Bitmap( u"resources/door_in.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, u"Exit", wx.EmptyString, None ) 
 		
 		self.m_toolBar3.Realize() 
 		
@@ -203,32 +203,32 @@ class MainFrame ( wx.Frame ):
 		bSizer13.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL, 2 )
 		
 		self.m_RoiLowSlider = wx.Slider( self.m_RoiPanel, wx.ID_ANY, 50, 0, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL|wx.SL_TOP, wx.DefaultValidator, u"m_RoiLowSlider" )
-		self.m_RoiLowSlider.SetToolTip( u"ROI Low" )
+		self.m_RoiLowSlider.SetToolTipString( u"ROI Low" )
 		
 		bSizer13.Add( self.m_RoiLowSlider, 4, wx.ALL, 0 )
 		
 		self.m_RoiLowSpinCtrl = wx.SpinCtrl( self.m_RoiPanel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 0, u"m_RoiLowSpinCtrl" )
-		self.m_RoiLowSpinCtrl.SetToolTip( u"ROI Low" )
+		self.m_RoiLowSpinCtrl.SetToolTipString( u"ROI Low" )
 		
 		bSizer13.Add( self.m_RoiLowSpinCtrl, 1, wx.ALL, 2 )
 		
 		self.m_RoiHighSlider = wx.Slider( self.m_RoiPanel, wx.ID_ANY, 50, 0, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL|wx.SL_TOP, wx.DefaultValidator, u"m_RoiHighSlider" )
-		self.m_RoiHighSlider.SetToolTip( u"ROI High" )
+		self.m_RoiHighSlider.SetToolTipString( u"ROI High" )
 		
 		bSizer13.Add( self.m_RoiHighSlider, 4, wx.ALL, 0 )
 		
 		self.m_RoiHighSpinCtrl = wx.SpinCtrl( self.m_RoiPanel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 0, u"m_RoiHighSpinCtrl" )
-		self.m_RoiHighSpinCtrl.SetToolTip( u"ROI High" )
+		self.m_RoiHighSpinCtrl.SetToolTipString( u"ROI High" )
 		
 		bSizer13.Add( self.m_RoiHighSpinCtrl, 1, wx.ALL, 2 )
 		
 		self.m_bpRefreshButton = wx.BitmapButton( self.m_RoiPanel, wx.ID_ANY, wx.Bitmap( u"resources/arrow_refresh_small.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
-		self.m_bpRefreshButton.SetToolTip( u"Reprocess" )
+		self.m_bpRefreshButton.SetToolTipString( u"Reprocess" )
 		
 		bSizer13.Add( self.m_bpRefreshButton, 0, wx.ALL, 2 )
 		
 		self.m_bpLogLinButton = wx.BitmapButton( self.m_RoiPanel, wx.ID_ANY, wx.Bitmap( u"resources/to_log.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW, wx.DefaultValidator, u"to_log" )
-		self.m_bpLogLinButton.SetToolTip( u"Toggle Log/Lin scaling" )
+		self.m_bpLogLinButton.SetToolTipString( u"Toggle Log/Lin scaling" )
 		
 		bSizer13.Add( self.m_bpLogLinButton, 0, wx.ALL, 2 )
 		
@@ -246,12 +246,12 @@ class MainFrame ( wx.Frame ):
 		bSizer12.Add( self.m_staticText2, 0, wx.ALIGN_CENTER|wx.ALL, 2 )
 		
 		self.m_StepSlider = wx.Slider( self.m_SpectrumSelectionPanel, wx.ID_ANY, 1, 1, 100, wx.DefaultPosition, wx.DefaultSize, wx.SL_BOTH|wx.SL_HORIZONTAL )
-		self.m_StepSlider.SetToolTip( u"Energy Step" )
+		self.m_StepSlider.SetToolTipString( u"Energy Step" )
 		
 		bSizer12.Add( self.m_StepSlider, 8, wx.ALL, 0 )
 		
 		self.m_StepSpinCtrl = wx.SpinCtrl( self.m_SpectrumSelectionPanel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 1, 100, 1 )
-		self.m_StepSpinCtrl.SetToolTip( u"Energy Step" )
+		self.m_StepSpinCtrl.SetToolTipString( u"Energy Step" )
 		
 		bSizer12.Add( self.m_StepSpinCtrl, 1, wx.ALIGN_CENTER|wx.ALL, 2 )
 		
@@ -344,7 +344,7 @@ class MainFrame ( wx.Frame ):
 		
 		self.SetSizer( bMainSizer )
 		self.Layout()
-#skip		self.m_statusBar = self.CreateStatusBar( 1, wx.ST_SIZEGRIP, wx.ID_ANY )
+		self.m_statusBar = self.CreateStatusBar( 1, wx.ST_SIZEGRIP, wx.ID_ANY )
 		
 		self.Centre( wx.BOTH )
 		
